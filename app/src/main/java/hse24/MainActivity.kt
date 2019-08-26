@@ -1,7 +1,8 @@
-package com.hse24.challenge
+package hse24
 
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.hse24.challenge.R
 
 class MainActivity : AppCompatActivity() {
 
