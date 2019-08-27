@@ -1,4 +1,4 @@
-package com.hse24.challenge
+package hse24
 
 import org.junit.Test
 
