@@ -5,7 +5,6 @@ import javax.inject.Qualifier
 @Qualifier
 @Retention(AnnotationRetention.RUNTIME)
 annotation class ApplicationConfig
-
 @Qualifier
 @Retention(AnnotationRetention.RUNTIME)
 annotation class ApplicationContext
