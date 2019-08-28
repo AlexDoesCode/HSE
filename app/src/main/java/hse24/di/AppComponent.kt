@@ -62,3 +62,14 @@ class AppModule {
     @AppEnvironment
     fun provideEnvironmentConfig(applicationConfig: AppConfig) = applicationConfig
 }
+
+//@Module(
+//    includes = [
+//        ShoppingActivityModule::class
+//    ]
+//)
+//abstract class ActivityModule {
+//
+//    @ContributesAndroidInjector
+//    internal abstract fun contributeMainActivity(): MainActivity
+//}

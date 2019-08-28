@@ -20,7 +20,11 @@ class ShoppingActivity : BaseActivity() {
         setContentView(R.layout.activity_main)
 
         if (savedInstanceState == null) {
-
+//            replaceFragment(
+//                CurrenciesFragment.newInstance(),
+//                R.id.exchange_activity_root,
+//                false
+//            )
         }
     }
 }
