@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="hse_primary">#ff6609</color>
+    <color name="hse_primary_dark">#00574B</color>
+    <color name="hse_accent">#D81B60</color>
+
+    <color name="blue">#22aed1</color>
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
+    <color name="barely_black">#222222</color>
+    <color name="grey">#888888</color>
+    <color name="light_grey">#b9b9b9</color>
+    <color name="lighter_grey">#dee4e7</color>
+    <color name="transparent_black">#99000000</color>
+
+    <color name="text_grey">#888888</color>
+    <color name="text_black">#000000</color>
+
 </resources>

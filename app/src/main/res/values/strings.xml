@@ -1,3 +1,7 @@
 <resources>
+
     <string name="app_name">HSE24</string>
+
+    <string name="common_error">Something went wrong</string>
+
 </resources>
