@@ -7,11 +7,14 @@ import dagger.Component
 import dagger.Module
 import dagger.Provides
 import dagger.android.AndroidInjector
+import dagger.android.ContributesAndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule
 import hse24.AppConfig
 import hse24.HSEApp
+import hse24.MainActivity
 import hse24.db.di.DatabaseModule
 import hse24.network.di.NetworkModule
+import hse24.shop.di.ShoppingActivityModule
 import io.reactivex.Scheduler
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Singleton
@@ -22,6 +25,7 @@ import javax.inject.Singleton
         AppModule::class,
         NetworkModule::class,
         DatabaseModule::class,
+        ActivityModule::class,
         AndroidSupportInjectionModule::class
     ]
 )
@@ -59,17 +63,17 @@ class AppModule {
 
     @Provides
     @Singleton
-    @AppEnvironment
+    @ApplicationConfig
     fun provideEnvironmentConfig(applicationConfig: AppConfig) = applicationConfig
 }
 
-//@Module(
-//    includes = [
-//        ShoppingActivityModule::class
-//    ]
-//)
-//abstract class ActivityModule {
-//
-//    @ContributesAndroidInjector
-//    internal abstract fun contributeMainActivity(): MainActivity
-//}
+@Module(
+    includes = [
+        ShoppingActivityModule::class
+    ]
+)
+abstract class ActivityModule {
+
+    @ContributesAndroidInjector
+    internal abstract fun contributeMainActivity(): MainActivity
+}
