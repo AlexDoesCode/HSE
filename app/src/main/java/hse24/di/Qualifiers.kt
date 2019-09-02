@@ -4,7 +4,7 @@ import javax.inject.Qualifier
 
 @Qualifier
 @Retention(AnnotationRetention.RUNTIME)
-annotation class AppEnvironment
+annotation class ApplicationConfig
 
 @Qualifier
 @Retention(AnnotationRetention.RUNTIME)

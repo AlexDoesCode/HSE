@@ -2,9 +2,12 @@ package hse24.network.di
 
 import dagger.Module
 import dagger.Provides
+import hse24.AppConfig
 import hse24.di.ShoppingOkHttp
 import hse24.di.ShoppingRetrofit
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -55,6 +58,7 @@ class OkHttpClientModule {
     @Provides
     @Singleton
     fun provideOkHttpClient(
+        appConfig: AppConfig,
         loggingInterceptor: HttpLoggingInterceptor
     ): OkHttpClient {
         val builder = OkHttpClient.Builder()
@@ -63,6 +67,7 @@ class OkHttpClientModule {
             .writeTimeout(NETWORK_TIMEOUT, TimeUnit.SECONDS)
         return builder
             .addNetworkInterceptor(loggingInterceptor)
+            .addInterceptor(ShoppingHeadersInterceptor(appConfig))
             .build()
     }
 
@@ -75,4 +80,17 @@ class OkHttpClientModule {
             .apply {
                 level = HttpLoggingInterceptor.Level.BODY
             }
+
+    private class ShoppingHeadersInterceptor(
+        private val appConfig: AppConfig
+    ) : Interceptor {
+
+        override fun intercept(chain: Interceptor.Chain): Response {
+            val request = chain.request().newBuilder()
+                .addHeader("appDevice", appConfig.deviceTypeHeader)
+                .addHeader("locale", appConfig.localeTypeHeader)
+                .build()
+            return chain.proceed(request)
+        }
+    }
 }
