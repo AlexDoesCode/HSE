@@ -12,6 +12,8 @@ import hse24.shop.cart.CartFragment
 import hse24.shop.cart.di.CartScope
 import hse24.shop.catalog.CatalogFragment
 import hse24.shop.catalog.di.CatalogScope
+import hse24.shop.categories.CategoriesFragment
+import hse24.shop.categories.di.CategoriesScope
 import hse24.shop.details.ProductDetailsFragment
 import hse24.shop.details.di.ProductDetailsScope
 import javax.inject.Scope
@@ -56,6 +58,10 @@ abstract class FragmentModule {
     @CatalogScope
     @ContributesAndroidInjector
     internal abstract fun contributeCatalogFragment(): CatalogFragment
+
+    @CategoriesScope
+    @ContributesAndroidInjector
+    internal abstract fun contributeCategoriesFragment(): CategoriesFragment
 
     @ProductDetailsScope
     @ContributesAndroidInjector

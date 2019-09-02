@@ -5,7 +5,7 @@ import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import dagger.android.support.DaggerFragment
 
-class BaseFragment : DaggerFragment() {
+abstract class BaseFragment : DaggerFragment() {
 
     override fun onDestroy() {
         super.onDestroy()

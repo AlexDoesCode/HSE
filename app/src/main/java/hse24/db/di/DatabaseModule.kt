@@ -8,7 +8,11 @@ import hse24.db.ShoppingDatabase
 import hse24.di.ApplicationContext
 import javax.inject.Singleton
 
-@Module
+@Module(
+    includes = [
+        DaoModule::class
+    ]
+)
 class DatabaseModule {
 
     @Singleton
@@ -24,4 +28,14 @@ class DatabaseModule {
                 ShoppingDatabase.DB_NAME
             )
             .build()
+}
+
+
+@Module
+class DaoModule {
+
+    @Singleton
+    @Provides
+    fun provideCategoriesDao(shoppingDatabase: ShoppingDatabase) = shoppingDatabase.categoriesDao()
+
 }

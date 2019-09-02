@@ -87,8 +87,8 @@ class OkHttpClientModule {
 
         override fun intercept(chain: Interceptor.Chain): Response {
             val request = chain.request().newBuilder()
-                .addHeader("appDevice:", appConfig.deviceTypeHeader)
-                .addHeader("locale:", appConfig.localeTypeHeader)
+                .addHeader("appDevice", appConfig.deviceTypeHeader)
+                .addHeader("locale", appConfig.localeTypeHeader)
                 .build()
             return chain.proceed(request)
         }
