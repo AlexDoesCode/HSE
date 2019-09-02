@@ -2,7 +2,9 @@ package hse24.shop.catalog.mvi
 
 import hse24.common.mvi.MviBasePresenter
 import hse24.common.mvi.OneShot
+import hse24.shop.catalog.adapter.CatalogItemViewModel
 import hse24.shop.catalog.di.CatalogScope
+import hse24.shop.repository.CatalogRepository.Companion.DEFAULT_ITEMS_PER_PAGE_AMOUNT
 import io.reactivex.functions.BiFunction
 import javax.inject.Inject
 
@@ -16,25 +18,46 @@ class CatalogPresenter @Inject constructor(
 
     override fun actionFromIntention(intent: CatalogIntention): CatalogAction =
         when (intent) {
-            CatalogIntention.Init -> CatalogAction.Init
-            is CatalogIntention.LoadNextPage -> CatalogAction.LoadNextPage(intent.pageIndex)
+            is CatalogIntention.Init -> CatalogAction.Init(intent.categoryId)
+            is CatalogIntention.LoadNextPage -> CatalogAction.LoadNextPage(intent.categoryId)
         }
 
     override val reducer: BiFunction<CatalogState, CatalogResult, CatalogState>
         get() = BiFunction { prevState, result ->
             when (result) {
-                CatalogResult.Error -> prevState.copy(
-                    isLoading = false,
-                    error = OneShot(true)
-                )
                 CatalogResult.Loading -> prevState.copy(
                     isLoading = true
                 )
-                is CatalogResult.CatalogItems -> prevState.copy(
+                is CatalogResult.CatalogItems -> {
+                    val items =
+                        if (prevState.isLastPageReached.not() && result.pageItems.size > DEFAULT_ITEMS_PER_PAGE_AMOUNT) {
+                            mutableListOf<CatalogItemViewModel>()
+                                .apply {
+                                    addAll(result.pageItems)
+                                    add(CatalogItemViewModel.LoadMore)
+                                }
+                        } else {
+                            result.pageItems
+                        }
+                    prevState.copy(
+                        isLoading = false,
+                        catalogItems = items
+                    )
+                }
+                CatalogResult.DataError -> prevState.copy(
                     isLoading = false,
-                    isLastPage = OneShot(false),
-                    catalogItems = result.pageItems
+                    error = OneShot(CatalogError.DATA)
                 )
+                CatalogResult.NetworkError -> prevState.copy(
+                    isLoading = false,
+                    error = OneShot(CatalogError.NETWORK)
+                )
+                is CatalogResult.FetchingFinished -> {
+                    prevState.copy(
+                        isLoading = false,
+                        isLastPageReached = result.isLastPageReached
+                    )
+                }
             }
         }
 }

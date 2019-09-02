@@ -91,7 +91,7 @@ class CategoriesAdapter(
 
         fun onDepartmentClick(id: Int)
         fun onCategoryRendered(id: Int, view: View)
-        fun onCategoryClick(id: Int, isExpanded: Boolean, hasSubcategories: Boolean)
-        fun onSubcategoryClick(id: Int)
+        fun onCategoryClick(id: Int, name: String, isExpanded: Boolean, hasSubcategories: Boolean)
+        fun onSubcategoryClick(id: Int, name: String)
     }
 }

@@ -20,6 +20,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_5dp"
+        android:paddingBottom="@dimen/padding_15dp"
+        android:paddingTop="@dimen/padding_15dp"
         android:textAppearance="@style/HSE24.Text.18sp.Bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/categories_category_divider"

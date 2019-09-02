@@ -2,14 +2,15 @@ package hse24.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import hse24.db.dao.CatalogDao
 import hse24.db.dao.CategoriesDao
+import hse24.db.entity.CatalogEntity
 import hse24.db.entity.CategoryEntity
 
 @Database(
     entities = [
-        CategoryEntity::class
-//        CartEntity::class,
-//        GoodsEntity::class
+        CategoryEntity::class,
+        CatalogEntity::class
     ],
     exportSchema = false,
     version = ShoppingDatabase.DB_VERSION
@@ -22,6 +23,5 @@ abstract class ShoppingDatabase : RoomDatabase() {
     }
 
     abstract fun categoriesDao(): CategoriesDao
-//    abstract fun goodsDao(): GoodsDao
-//    abstract fun cartDao(): CartDao
+    abstract fun catalogDao(): CatalogDao
 }
