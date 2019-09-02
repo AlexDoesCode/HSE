@@ -4,6 +4,7 @@ import hse24.db.dao.CategoriesDao
 import hse24.db.entity.CategoryEntity
 import hse24.db.entity.toCategoryModel
 import hse24.di.IoScheduler
+import hse24.network.ShoppingApi
 import hse24.shop.categories.di.CategoriesScope
 import io.reactivex.Observable
 import io.reactivex.Scheduler
@@ -13,6 +14,7 @@ import javax.inject.Inject
 @CategoriesScope
 class CategoriesRepository @Inject constructor(
     @IoScheduler private val ioScheduler: Scheduler,
+    private val shoppingApi: ShoppingApi,
     private val categoriesDao: CategoriesDao
 ) {
 
@@ -48,6 +50,8 @@ class CategoriesRepository @Inject constructor(
                 entities.map { it.toCategoryModel() }
             }
             .toSingle(emptyList())
+
+    fun fetchCategories() = shoppingApi.fetchCategories()
 
     fun persistCategories(categories: List<CategoryEntity>) =
         categoriesDao

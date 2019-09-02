@@ -47,6 +47,7 @@ class CategoryLayout @JvmOverloads constructor(
             setOnClickListener {
                 clickListener.onCategoryClick(
                     viewModel.id,
+                    viewModel.name,
                     viewModel.isExpanded,
                     viewModel.hasSubcategories
                 )

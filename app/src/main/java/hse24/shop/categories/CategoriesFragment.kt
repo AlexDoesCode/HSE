@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hse24.challenge.R
 import hse24.common.android.BaseFragment
 import hse24.common.extension.visible
+import hse24.shop.catalog.CatalogFragment
 import hse24.shop.categories.adapter.CategoriesAdapter
 import hse24.shop.categories.adapter.CategoryLayout
 import hse24.shop.categories.adapter.DepartmentsAdapter
@@ -41,7 +42,7 @@ class CategoriesFragment : BaseFragment() {
             intentionsSubject.onNext(CategoriesIntention.GetDepartmentCategories(id))
         }
 
-        override fun onCategoryClick(id: Int, isExpanded: Boolean, hasSubcategories: Boolean) {
+        override fun onCategoryClick(id: Int, name: String, isExpanded: Boolean, hasSubcategories: Boolean) {
             Timber.d("Category $id clicked")
 
             if (hasSubcategories) {
@@ -60,7 +61,11 @@ class CategoriesFragment : BaseFragment() {
                     }
                 }
             } else {
-                //TODO: Implement navigation to catalog
+                replaceFragment(
+                    CatalogFragment.newInstance(id, name),
+                    R.id.shopping_activity_root,
+                    false
+                )
             }
         }
 
@@ -68,9 +73,13 @@ class CategoriesFragment : BaseFragment() {
             categoriesLayoutsMap[id] = view as CategoryLayout
         }
 
-        override fun onSubcategoryClick(id: Int) {
+        override fun onSubcategoryClick(id: Int, name: String) {
             Timber.d("Subcategory $id clicked")
-            //TODO: Implement navigation to catalog
+            replaceFragment(
+                CatalogFragment.newInstance(id, name),
+                R.id.shopping_activity_root,
+                false
+            )
         }
     }
 

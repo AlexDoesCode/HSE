@@ -1,9 +1,11 @@
 package hse24.shop.catalog.mvi
 
 import hse24.common.mvi.MviInteractor
+import hse24.db.entity.toProductViewModel
 import hse24.di.IoScheduler
 import hse24.shop.catalog.di.CatalogScope
-import hse24.shop.repository.CategoriesRepository
+import hse24.shop.repository.CatalogRepository
+import hse24.shop.usecase.catalog.FetchCatalogUseCase
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
@@ -14,7 +16,8 @@ import javax.inject.Inject
 @CatalogScope
 class CatalogInteractor @Inject constructor(
     @IoScheduler private val ioScheduler: Scheduler,
-    private val catalogRepository: CategoriesRepository
+    private val catalogRepository: CatalogRepository,
+    private val fetchCatalogUseCase: FetchCatalogUseCase
 ) : MviInteractor<CatalogAction, CatalogResult> {
 
     private val initProcessor: ObservableTransformer<CatalogAction.Init, CatalogResult> =
@@ -22,10 +25,32 @@ class CatalogInteractor @Inject constructor(
             action
                 .switchMap {
                     catalogRepository
-                        .observeDepartments()
-                        .map {
-                            CatalogResult.Error as CatalogResult
+                        .observeProductsByCategory(it.categoryId)
+                        .map { entities ->
+                            CatalogResult.CatalogItems(entities.map { entity -> entity.toProductViewModel() }) as CatalogResult
                         }
+                        .subscribeOn(ioScheduler)
+                        .onErrorReturn { throwable ->
+                            if (throwable !is IOException) {
+                                Timber.e(throwable)
+                            } else {
+                                Timber.d(throwable)
+                            }
+                            CatalogResult.DataError
+                        }
+                }
+
+        }
+
+    private val fetchInitialCatalogProcessor: ObservableTransformer<CatalogAction.Init, CatalogResult> =
+        ObservableTransformer { action ->
+            action
+                .switchMap {
+                    fetchCatalogUseCase.execute(true, it.categoryId)
+                        .map { isLastPageReached ->
+                            CatalogResult.FetchingFinished(isLastPageReached) as CatalogResult
+                        }
+                        .toObservable()
                         .subscribeOn(ioScheduler)
                         .startWith(CatalogResult.Loading)
                         .onErrorReturn { throwable ->
@@ -34,7 +59,30 @@ class CatalogInteractor @Inject constructor(
                             } else {
                                 Timber.d(throwable)
                             }
-                            CatalogResult.Error
+                            CatalogResult.NetworkError
+                        }
+                }
+
+        }
+
+    private val fetchCatalogProcessor: ObservableTransformer<CatalogAction.LoadNextPage, CatalogResult> =
+        ObservableTransformer { action ->
+            action
+                .switchMap {
+                    fetchCatalogUseCase.execute(false, it.categoryId)
+                        .map { isLastPageReached ->
+                            CatalogResult.FetchingFinished(isLastPageReached) as CatalogResult
+                        }
+                        .toObservable()
+                        .subscribeOn(ioScheduler)
+                        .startWith(CatalogResult.Loading)
+                        .onErrorReturn { throwable ->
+                            if (throwable !is IOException) {
+                                Timber.e(throwable)
+                            } else {
+                                Timber.d(throwable)
+                            }
+                            CatalogResult.NetworkError
                         }
                 }
 
@@ -48,10 +96,13 @@ class CatalogInteractor @Inject constructor(
                     Observable.merge(
                         listOf(
                             shared.ofType(CatalogAction.Init::class.java)
-                                .compose(initProcessor)
+                                .compose(initProcessor),
+                            shared.ofType(CatalogAction.Init::class.java)
+                                .compose(fetchInitialCatalogProcessor),
+                            shared.ofType(CatalogAction.LoadNextPage::class.java)
+                                .compose(fetchCatalogProcessor)
                         )
                     )
-
                 }
         }
 }

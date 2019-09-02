@@ -24,7 +24,7 @@ class SubcategoryLayout @JvmOverloads constructor(
         findViewById<TextView>(R.id.categories_subcategory_name)
     }
 
-    private var subcategoryId: Int? = null
+    private lateinit var viewModel: CategoryItemViewModel.SubcategoryViewModel
 
     init {
         selfInflate(R.layout.categories_subcategory_layout)
@@ -32,9 +32,7 @@ class SubcategoryLayout @JvmOverloads constructor(
             applyLayoutParams()
 
             setOnClickListener {
-                subcategoryId?.let {
-                    clickListener.onSubcategoryClick(it)
-                }
+                clickListener.onSubcategoryClick(viewModel.id, viewModel.name)
             }
         }
     }
@@ -42,7 +40,7 @@ class SubcategoryLayout @JvmOverloads constructor(
     override fun render(data: CategoryItemViewModel) {
         if (data is CategoryItemViewModel.SubcategoryViewModel) {
             with(data) {
-                subcategoryId = id
+                viewModel = data
                 subcategoryName.text = name
             }
         }
