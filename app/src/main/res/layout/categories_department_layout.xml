@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
+
+    <ImageView
+        android:id="@+id/categories_department_image"
+        android:layout_width="@dimen/width_150dp"
+        android:layout_height="@dimen/height_150dp"
+        android:paddingStart="@dimen/padding_10dp"
+        android:paddingTop="@dimen/padding_10dp"
+        android:paddingEnd="@dimen/padding_10dp"
+        app:layout_constraintBottom_toTopOf="@id/categories_department_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/home_icon"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/categories_department_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_5dp"
+        android:layout_marginEnd="@dimen/margin_5dp"
+        android:layout_marginBottom="@dimen/margin_5dp"
+        android:textAppearance="@style/HSE24.Text.20sp.Bold"
+        app:layout_constraintEnd_toEndOf="@id/categories_department_image"
+        app:layout_constraintStart_toStartOf="@id/categories_department_image"
+        app:layout_constraintTop_toBottomOf="@id/categories_department_image"
+        tools:text="Department" />
+
+</merge>

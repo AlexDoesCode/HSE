@@ -35,7 +35,7 @@ interface AppComponent : AndroidInjector<HSEApp> {
     interface Builder {
 
         @BindsInstance
-        fun application(application: HSEApp): Builder
+        fun application(application: Application): Builder
 
         @BindsInstance
         fun appConfig(applicationConfig: AppConfig): Builder

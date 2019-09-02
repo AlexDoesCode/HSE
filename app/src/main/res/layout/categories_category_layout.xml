@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/lighter_grey">
+
+    <View
+        android:id="@+id/categories_category_divider"
+        android:layout_width="@dimen/width_0dp"
+        android:layout_height="@dimen/height_1dp"
+        android:background="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/categories_category_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_5dp"
+        android:textAppearance="@style/HSE24.Text.18sp.Bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/categories_category_divider"
+        tools:text="Category name" />
+
+    <ImageView
+        android:id="@+id/categories_category_collapse_down"
+        android:layout_width="@dimen/width_30dp"
+        android:layout_height="@dimen/height_30dp"
+        android:layout_marginEnd="@dimen/margin_10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/categories_category_divider"
+        app:srcCompat="@drawable/ic_collapse_down" />
+
+    <ImageView
+        android:id="@+id/categories_category_collapse_up"
+        android:layout_width="@dimen/width_30dp"
+        android:layout_height="@dimen/height_30dp"
+        android:layout_marginEnd="@dimen/margin_10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/categories_category_divider"
+        app:srcCompat="@drawable/ic_collapse_up"
+        tools:visibility="gone" />
+
+</merge>

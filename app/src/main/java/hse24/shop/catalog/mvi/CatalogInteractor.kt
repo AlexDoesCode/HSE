@@ -3,6 +3,7 @@ package hse24.shop.catalog.mvi
 import hse24.common.mvi.MviInteractor
 import hse24.di.IoScheduler
 import hse24.shop.catalog.di.CatalogScope
+import hse24.shop.repository.CategoriesRepository
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
@@ -12,16 +13,16 @@ import javax.inject.Inject
 
 @CatalogScope
 class CatalogInteractor @Inject constructor(
-    @IoScheduler private val ioScheduler: Scheduler
+    @IoScheduler private val ioScheduler: Scheduler,
+    private val catalogRepository: CategoriesRepository
 ) : MviInteractor<CatalogAction, CatalogResult> {
 
     private val initProcessor: ObservableTransformer<CatalogAction.Init, CatalogResult> =
         ObservableTransformer { action ->
             action
                 .switchMap {
-                    Observable.fromCallable {
-
-                    }
+                    catalogRepository
+                        .observeDepartments()
                         .map {
                             CatalogResult.Error as CatalogResult
                         }

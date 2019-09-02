@@ -1,19 +1,14 @@
 package hse24.network.model
 
-data class CategoriesModel(
+data class CategoryApiModel(
     val categoryId: Int?,
     val displayName: String?,
     val resultCount: Int?,
-    val parentCategoryId: Int?,
-    val children: List<CategoriesModel>?
+    val children: List<CategoryApiModel>?
 )
 
 data class CategoryItemModel(
     val categoryId: Int
-)
-
-data class CategoryModel(
-    val id: Int
 )
 
 data class ProductModel(

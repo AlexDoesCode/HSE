@@ -5,7 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import com.hse24.challenge.R
 import hse24.common.android.BaseActivity
-import hse24.shop.catalog.CatalogFragment
+import hse24.shop.categories.CategoriesFragment
 
 class ShoppingActivity : BaseActivity() {
 
@@ -17,11 +17,11 @@ class ShoppingActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.shopping_activity)
 
         if (savedInstanceState == null) {
             replaceFragment(
-                CatalogFragment.newInstance(),
+                CategoriesFragment.newInstance(),
                 R.id.shopping_activity_root,
                 false
             )

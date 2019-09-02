@@ -13,6 +13,7 @@ import retrofit2.Retrofit
 class ApiModule {
 
     @Provides
+    @ShoppingScope
     fun provideShoppingApi(
         @ShoppingRetrofit retrofitBuilder: Retrofit.Builder,
         @ApplicationConfig appConfig: AppConfig
@@ -23,6 +24,7 @@ class ApiModule {
             .create(ShoppingApi::class.java)
 
     @Provides
+    @ShoppingScope
     fun provideImageRetreivalApi(
         @ShoppingRetrofit retrofitBuilder: Retrofit.Builder,
         @ApplicationConfig appConfig: AppConfig
