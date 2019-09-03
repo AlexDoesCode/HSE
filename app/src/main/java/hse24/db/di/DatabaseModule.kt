@@ -42,4 +42,8 @@ class DaoModule {
     @Provides
     fun provideCatalogDao(shoppingDatabase: ShoppingDatabase) = shoppingDatabase.catalogDao()
 
+    @Singleton
+    @Provides
+    fun provideCartDao(shoppingDatabase: ShoppingDatabase) = shoppingDatabase.cartDao()
+
 }

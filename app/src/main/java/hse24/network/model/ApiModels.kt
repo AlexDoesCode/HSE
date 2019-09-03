@@ -33,3 +33,21 @@ data class PageDataApiModel(
     val page: Int,
     val numPages: Int
 )
+
+data class ProductDetailsApiModel(
+    val sku: Int,
+    val imageUris: List<String>?,
+    val title: String?,
+    val nameShort: String?,
+    val longDescription: String?,
+    val productPrice: PriceApiModel,
+    val variations: List<ProductVariationsApiModel>,
+    val brandNameShort: String?,
+    val brandNameLong: String?
+)
+
+data class ProductVariationsApiModel(
+    val sku: Int,
+    val imageUris: List<String>,
+    val variationType: String?
+)

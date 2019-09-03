@@ -29,6 +29,10 @@
         <item name="android:textSize">@dimen/text_size_18sp</item>
     </style>
 
+    <style name="HSE24.Text.18sp.Grey">
+        <item name="android:textColor">@color/light_grey</item>
+    </style>
+
     <style name="HSE24.Text.18sp.Bold">
         <item name="android:textStyle">bold</item>
     </style>
