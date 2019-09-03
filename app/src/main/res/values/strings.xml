@@ -2,6 +2,11 @@
 
     <string name="app_name">HSE24</string>
 
-    <string name="common_error">Something went wrong</string>
+    <string name="common_data_error">Something went wrong with data</string>
+    <string name="common_network_error">Check your connection and try again</string>
+    <string name="product_details_fragment_add_to_cart">Add to cart</string>
+    <string name="product_details_fragment_choose_variant">Choose variant</string>
+    <string name="product_details_fragment_added_to_cart">Successfully added</string>
+    <string name="product_details_fragment_already_in_cart">Product is already in the cart</string>
 
 </resources>

@@ -18,6 +18,7 @@ import hse24.shop.catalog.mvi.CatalogError
 import hse24.shop.catalog.mvi.CatalogIntention
 import hse24.shop.catalog.mvi.CatalogPresenter
 import hse24.shop.catalog.mvi.CatalogState
+import hse24.shop.details.ProductDetailsFragment
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -47,6 +48,11 @@ class CatalogFragment : BaseFragment() {
 
         override fun onProductClick(id: Int) {
             Timber.d("Product $id clicked")
+            replaceFragment(
+                ProductDetailsFragment.newInstance(id),
+                R.id.shopping_activity_root,
+                false
+            )
         }
     }
 
@@ -142,8 +148,8 @@ class CatalogFragment : BaseFragment() {
                 Toast.makeText(
                     context,
                     when (it) {
-                        CatalogError.DATA -> "Data Error"
-                        CatalogError.NETWORK -> "Network Error"
+                        CatalogError.DATA -> getString(R.string.common_data_error)
+                        CatalogError.NETWORK -> getString(R.string.common_data_error)
                     },
                     Toast.LENGTH_SHORT
                 ).show()

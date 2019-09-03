@@ -2,7 +2,6 @@ package hse24.shop.details.mvi
 
 import hse24.common.mvi.MviBasePresenter
 import hse24.common.mvi.OneShot
-import hse24.shop.details.ProductDetailsViewModel
 import hse24.shop.details.di.ProductDetailsScope
 import io.reactivex.functions.BiFunction
 import javax.inject.Inject
@@ -19,7 +18,9 @@ class ProductDetailsPresenter @Inject constructor(
 
     override fun actionFromIntention(intent: ProductDetailsIntention): ProductDetailsAction =
         when (intent) {
-            ProductDetailsIntention.Init -> ProductDetailsAction.Init
+            is ProductDetailsIntention.Init -> ProductDetailsAction.Init(intent.sku)
+            ProductDetailsIntention.AddProductToCart -> ProductDetailsAction.AddProductToCart
+            is ProductDetailsIntention.LoadProductVariation -> ProductDetailsAction.LoadProductVariation(intent.sku)
         }
 
     override val reducer: BiFunction<ProductDetailsState, ProductDetailsResult, ProductDetailsState>
@@ -28,18 +29,22 @@ class ProductDetailsPresenter @Inject constructor(
                 ProductDetailsResult.Loading -> prevState.copy(
                     isLoading = true
                 )
-                ProductDetailsResult.Error -> prevState.copy(
-                    isLoading = false,
-                    error = OneShot(true)
-                )
                 is ProductDetailsResult.ProductData -> prevState.copy(
                     isLoading = false,
-                    //TODO: Consider applying data mapping
-                    productData = ProductDetailsViewModel(
-                        id = result.viewModel.id
-                    )
+                    productData = prevState.productData
+                )
+                is ProductDetailsResult.CartAdditionResult -> prevState.copy(
+                    isLoading = false,
+                    addToCartState = OneShot(result.wasAdded)
+                )
+                ProductDetailsResult.DataError -> prevState.copy(
+                    isLoading = false,
+                    error = OneShot(ProductDetailsError.DATA)
+                )
+                ProductDetailsResult.NetworkError -> prevState.copy(
+                    isLoading = false,
+                    error = OneShot(ProductDetailsError.NETWORK)
                 )
             }
         }
-
 }

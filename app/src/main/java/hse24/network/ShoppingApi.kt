@@ -2,7 +2,7 @@ package hse24.network
 
 import hse24.network.model.CatalogPageApiModel
 import hse24.network.model.CategoryApiModel
-import hse24.network.model.ProductApiModel
+import hse24.network.model.ProductDetailsApiModel
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -43,6 +43,6 @@ interface ShoppingApi {
     @GET("1/product/tree/{productSKU}")
     fun fetchProductDetailsBySku(
         @Path("productSKU") id: Int
-    ): Single<ProductApiModel>
+    ): Single<ProductDetailsApiModel>
 
 }
