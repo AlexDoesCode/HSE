@@ -16,10 +16,7 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.hse24.challenge.R
 import hse24.common.android.adapter.ItemRenderer
-import hse24.common.extension.applyLayoutParams
-import hse24.common.extension.doInRuntime
-import hse24.common.extension.selfInflate
-import hse24.common.extension.visible
+import hse24.common.extension.*
 
 @SuppressLint("ViewConstructor")
 class ProductLayout @JvmOverloads constructor(
@@ -98,7 +95,7 @@ class ProductLayout @JvmOverloads constructor(
 
                 this@ProductLayout.brandName.text = brandName
                 this@ProductLayout.name.text = name
-                this@ProductLayout.price.text = price
+                this@ProductLayout.price.text = "${currency.toCurrency()} $price"
             }
         }
     }

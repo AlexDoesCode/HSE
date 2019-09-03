@@ -26,8 +26,8 @@ class ProductDetailsInteractor @Inject constructor(
                 .switchMap {
                     fetchProductDetailsBySkuUseCase.execute(it.sku)
                         .toObservable()
-                        .map {
-                            ProductDetailsResult.ProductData(it.toProductDetailsViewModel()) as ProductDetailsResult
+                        .map { model ->
+                            ProductDetailsResult.ProductData(model.toProductDetailsViewModel()) as ProductDetailsResult
                         }
                         .subscribeOn(ioScheduler)
                         .startWith(ProductDetailsResult.Loading)
@@ -48,8 +48,8 @@ class ProductDetailsInteractor @Inject constructor(
                 .switchMap {
                     fetchProductDetailsBySkuUseCase.execute(it.sku)
                         .toObservable()
-                        .map {
-                            ProductDetailsResult.ProductData(it.toProductDetailsViewModel()) as ProductDetailsResult
+                        .map { model ->
+                            ProductDetailsResult.ProductData(model.toProductDetailsViewModel()) as ProductDetailsResult
                         }
                         .subscribeOn(ioScheduler)
                         .startWith(ProductDetailsResult.Loading)
@@ -73,7 +73,6 @@ class ProductDetailsInteractor @Inject constructor(
                             ProductDetailsResult.CartAdditionResult(it) as ProductDetailsResult
                         }
                         .subscribeOn(ioScheduler)
-                        .startWith(ProductDetailsResult.Loading)
                         .onErrorReturn { throwable ->
                             if (throwable !is IOException) {
                                 Timber.e(throwable)

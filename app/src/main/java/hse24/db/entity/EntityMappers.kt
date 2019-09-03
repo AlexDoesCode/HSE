@@ -6,6 +6,7 @@ import hse24.network.model.CategoryApiModel
 import hse24.network.model.ProductApiModel
 import hse24.network.model.ProductDetailsApiModel
 import hse24.network.model.ProductVariationsApiModel
+import hse24.shop.cart.adapter.CartItemViewModel
 import hse24.shop.catalog.adapter.CatalogItemViewModel
 import hse24.shop.categories.adapter.CategoryItemViewModel
 import hse24.shop.categories.adapter.DepartmentViewModel
@@ -66,7 +67,8 @@ fun CatalogEntity.toProductViewModel() = CatalogItemViewModel.ProductViewModel(
     sku = this.sku,
     brandName = this.brandName,
     name = this.productName,
-    price = "${this.price} ${this.currencySymbol}",
+    price = this.price,
+    currency = this.currencySymbol,
     imageUrl = this.imageUrl
 )
 
@@ -77,18 +79,23 @@ fun ProductDetailsModel.toCartEntity() = CartEntity(
     name = this.name,
     variation = this.variations.firstOrNull { it.sku == this.sku }?.name ?: "UNKNOWN",
     imageUrl = this.imageUris.firstOrNull() ?: "",
-    price = this.price
+    price = this.price,
+    currency = this.currency
 )
 
 fun ProductDetailsApiModel.toProductModel() = ProductDetailsModel(
     sku = this.sku,
-    imageUris = this.imageUris ?: emptyList(),
+    imageUris = when (this.variations.isNullOrEmpty()) {
+        true -> this.imageUris ?: emptyList()
+        false -> variations.firstOrNull { it.sku == this.sku }?.imageUris ?: this.imageUris ?: emptyList()
+    },
     title = this.title ?: "UNKNOWN",
     name = this.nameShort ?: "UNKNOWN",
     brandName = this.brandNameShort ?: this.brandNameLong ?: "UNKNOWN",
     description = this.longDescription ?: "",
     variationName = this.variations.firstOrNull { it.sku == this.sku }?.variationType ?: "UNKNOWN ",
-    price = "${this.productPrice.price}  ${this.productPrice.currency}",
+    price = this.productPrice.price ?: 0f,
+    currency = this.productPrice.currency ?: "",
     variations = this.variations.map { it.toProductVariationModel() }
 )
 
@@ -99,12 +106,24 @@ fun ProductVariationsApiModel.toProductVariationModel() = ProductVariationModel(
 
 fun ProductDetailsModel.toProductDetailsViewModel() = ProductDetailsViewModel(
     sku = this.sku,
-    imageUrls = this.imageUris,
+    imageUrls = this.imageUris.map { ImageUtils.getImageUrl(it, ImageSize.LARGE) },
     title = this.title,
     name = this.name,
     description = this.description,
     price = this.price,
+    currency = this.currency,
     brandName = this.brandName,
     currentVariation = this.variationName,
     variations = this.variations.map { ProductVariationViewModel(it.sku, it.name) }
+)
+
+fun CartEntity.toCartProductViewModel() = CartItemViewModel.ProductItem(
+    id = this.id,
+    sku = this.sku,
+    brandName = this.brand,
+    name = this.name,
+    variation = this.variation,
+    imageUrl = ImageUtils.getImageUrl(this.imageUrl, ImageSize.SMALL),
+    price = this.price,
+    currency = this.currency
 )

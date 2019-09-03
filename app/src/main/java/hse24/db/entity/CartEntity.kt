@@ -29,7 +29,10 @@ data class CartEntity(
     val variation: String,
 
     @ColumnInfo(name = PRICE)
-    val price: String
+    val price: Float,
+
+    @ColumnInfo(name = CURRENCY)
+    val currency: String
 ) {
 
     companion object {
@@ -41,6 +44,7 @@ data class CartEntity(
         const val IMAGE_URL = "image_uri"
         const val VARIATION_NAME = "variation_desc"
         const val PRICE = "product_price"
+        const val CURRENCY = "currency_string"
         const val CART_INSERT_ID = 0
     }
 }

@@ -6,7 +6,8 @@ data class ProductDetailsViewModel(
     val title: String,
     val name: String,
     val description: String,
-    val price: String,
+    val price: Float,
+    val currency: String,
     val brandName: String,
     val currentVariation: String,
     val variations: List<ProductVariationViewModel>

@@ -51,7 +51,7 @@ class CatalogFragment : BaseFragment() {
             replaceFragment(
                 ProductDetailsFragment.newInstance(id),
                 R.id.shopping_activity_root,
-                false
+                true
             )
         }
     }

@@ -40,7 +40,7 @@ interface ShoppingApi {
     /1/c/**/*-{categoryId}/%3F page %3D {page} %26 filterAttribute_motive %3D {filter}
      */
 
-    @GET("1/product/tree/{productSKU}")
+    @GET("1/product/{productSKU}")
     fun fetchProductDetailsBySku(
         @Path("productSKU") id: Int
     ): Single<ProductDetailsApiModel>

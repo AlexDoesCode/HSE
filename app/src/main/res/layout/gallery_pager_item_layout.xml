@@ -9,6 +9,7 @@
         android:id="@+id/gallery_pager_item_image"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:scaleType="fitXY"
         tools:ignore="ContentDescription" />
 
     <ProgressBar

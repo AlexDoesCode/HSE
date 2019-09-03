@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/cart_fragment_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_20dp"
+        android:layout_marginEnd="@dimen/margin_20dp"
+        android:layout_gravity="center"
+        android:background="@color/light_grey"/>
+
+    <FrameLayout
+        android:id="@+id/cart_fragment_progress"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/transparent_black"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <ProgressBar
+            style="@style/Base.Widget.AppCompat.ProgressBar"
+            android:layout_width="@dimen/width_50dp"
+            android:layout_height="@dimen/height_50dp"
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            android:indeterminateTint="@color/hse_primary" />
+
+    </FrameLayout>
+
+</FrameLayout>

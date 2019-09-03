@@ -25,12 +25,14 @@
     <dimen name="margin_15dp">15dp</dimen>
     <dimen name="margin_20dp">20dp</dimen>
     <dimen name="margin_30dp">30dp</dimen>
+    <dimen name="margin_40dp">40dp</dimen>
     <dimen name="margin_60dp">60dp</dimen>
 
     <dimen name="padding_5dp">5dp</dimen>
     <dimen name="padding_10dp">10dp</dimen>
     <dimen name="padding_15dp">15dp</dimen>
     <dimen name="padding_30dp">30dp</dimen>
+    <dimen name="padding_60dp">60dp</dimen>
 
     <dimen name="elevation_10dp">10dp</dimen>
 

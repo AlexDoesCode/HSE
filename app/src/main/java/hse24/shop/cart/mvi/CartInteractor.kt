@@ -1,8 +1,11 @@
 package hse24.shop.cart.mvi
 
 import hse24.common.mvi.MviInteractor
+import hse24.db.entity.toCartProductViewModel
 import hse24.di.IoScheduler
 import hse24.shop.cart.di.CartScope
+import hse24.shop.repository.CartRepository
+import hse24.shop.usecase.cart.RemoveCartItemUseCase
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
@@ -12,21 +15,20 @@ import javax.inject.Inject
 
 @CartScope
 class CartInteractor @Inject constructor(
-    @IoScheduler private val ioScheduler: Scheduler
+    @IoScheduler private val ioScheduler: Scheduler,
+    private val cartRepository: CartRepository,
+    private val removeCartItemUseCase: RemoveCartItemUseCase
 ) : MviInteractor<CartAction, CartResult> {
 
     private val initProcessor: ObservableTransformer<in CartAction.Init, out CartResult> =
         ObservableTransformer { action ->
             action
                 .switchMap {
-                    Observable.fromCallable {
-
-                    }
-                        .map {
-                            CartResult.Error as CartResult
+                    cartRepository.observeCart()
+                        .map { entities ->
+                            CartResult.CartItems(entities.map { item -> item.toCartProductViewModel() }) as CartResult
                         }
                         .subscribeOn(ioScheduler)
-                        .startWith(CartResult.Loading)
                         .onErrorReturn { throwable ->
                             if (throwable !is IOException) {
                                 Timber.e(throwable)
@@ -41,24 +43,10 @@ class CartInteractor @Inject constructor(
     private val removeItemProcessor: ObservableTransformer<in CartAction.RemoveAction, out CartResult> =
         ObservableTransformer { action ->
             action
-                .switchMap {
-                    Observable.fromCallable {
-
-                    }
-                        .map {
-                            CartResult.Error as CartResult
-                        }
-                        .subscribeOn(ioScheduler)
-                        .startWith(CartResult.Loading)
-                        .onErrorReturn { throwable ->
-                            if (throwable !is IOException) {
-                                Timber.e(throwable)
-                            } else {
-                                Timber.d(throwable)
-                            }
-                            CartResult.Error
-                        }
+                .flatMapCompletable {
+                    removeCartItemUseCase.execute(it.sku)
                 }
+                .toObservable()
         }
 
     override fun actionProcessor(): ObservableTransformer<in CartAction, out CartResult> =
