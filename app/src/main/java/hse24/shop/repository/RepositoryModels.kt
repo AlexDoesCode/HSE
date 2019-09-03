@@ -14,7 +14,8 @@ data class ProductDetailsModel(
     val brandName: String,
     val description: String,
     val variationName: String,
-    val price: String,
+    val price: Float,
+    val currency: String,
     val variations: List<ProductVariationModel>
 )
 

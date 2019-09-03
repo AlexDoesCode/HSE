@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import androidx.viewpager.widget.PagerAdapter
+import androidx.viewpager.widget.ViewPager
 
 class ImageViewPagerAdapter(
     private val context: Context,
@@ -15,11 +16,11 @@ class ImageViewPagerAdapter(
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val view = GalleryPagerItemLayout(context, imageUrls[position])
-        container.addView(view)
+        (container as ViewPager).addView(view)
         return view
     }
 
     override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
-        container.removeViewAt(position)
+        (container as ViewPager).removeView(`object` as View)
     }
 }

@@ -31,7 +31,7 @@ class ProductDetailsPresenter @Inject constructor(
                 )
                 is ProductDetailsResult.ProductData -> prevState.copy(
                     isLoading = false,
-                    productData = prevState.productData
+                    productData = result.viewModel
                 )
                 is ProductDetailsResult.CartAdditionResult -> prevState.copy(
                     isLoading = false,

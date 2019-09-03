@@ -33,17 +33,16 @@ class ProductDetailsRepository @Inject constructor(
     //Returns FALSE if already added
     fun addProductToCart(): Observable<Boolean> =
         productPublisher
-            .takeLast(1)
             .switchMap { productDetailsModel ->
                 cartDao.getProductsFromCartBySku(productDetailsModel.sku)
                     .observeOn(ioScheduler)
                     .toObservable()
                     .map { entities ->
-                        val isPresent = entities.firstOrNull { item -> item.sku == productDetailsModel.sku } == null
+                        val isPresent = entities.firstOrNull { item -> item.sku == productDetailsModel.sku } != null
                         if (isPresent.not()) {
                             cartDao.insert(productDetailsModel.toCartEntity())
                         }
-                        isPresent
+                        isPresent.not()
                     }
             }
 }

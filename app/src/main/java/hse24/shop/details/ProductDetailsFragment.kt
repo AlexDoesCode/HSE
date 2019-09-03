@@ -3,6 +3,7 @@ package hse24.shop.details
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.os.Bundle
+import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +16,9 @@ import com.jakewharton.rxbinding2.view.RxView
 import hse24.common.android.BaseFragment
 import hse24.common.android.FragmentArgumentDelegate
 import hse24.common.android.adapter.ImageViewPagerAdapter
+import hse24.common.extension.toCurrency
 import hse24.common.extension.visible
+import hse24.shop.cart.CartFragment
 import hse24.shop.details.model.ProductVariationViewModel
 import hse24.shop.details.mvi.ProductDetailsError
 import hse24.shop.details.mvi.ProductDetailsIntention
@@ -50,6 +53,7 @@ class ProductDetailsFragment : BaseFragment() {
 
     private var productSku by FragmentArgumentDelegate<Int>()
 
+    private var prevSku = -1
     private var adapter: ImageViewPagerAdapter? = null
 
     @Inject
@@ -102,23 +106,21 @@ class ProductDetailsFragment : BaseFragment() {
                 intentions()
             ),
             RxView.clicks(addToCartButton)
-                .skip(1)
                 .subscribe {
                     intentionsSubject.onNext(ProductDetailsIntention.AddProductToCart)
                 },
             RxView.clicks(variationsView)
-                .skip(1)
                 .subscribe {
-                    context?.let {
-                        AlertDialog.Builder(it)
+                    context?.let { ctxt ->
+                        AlertDialog.Builder(ctxt)
                             .apply {
-                                title.text = getString(R.string.product_details_fragment_choose_variant)
+                                setTitle(getString(R.string.product_details_fragment_choose_variant))
                                 setItems(
-                                    variations.map { it.name }.toTypedArray(),
+                                    variations.map { item -> item.name }.toTypedArray(),
                                     variantsDialogClickListener
                                 )
                             }
-                            .create()
+                            .show()
                     }
                 }
         )
@@ -156,25 +158,34 @@ class ProductDetailsFragment : BaseFragment() {
                     context,
                     when (it) {
                         true -> getString(R.string.product_details_fragment_added_to_cart)
-                        false -> getString(R.string.product_details_fragment_already_in_cart)
+                        false -> {
+                            //TODO: Just for test
+                            replaceFragment(
+                                CartFragment.newInstance(),
+                                R.id.shopping_activity_root,
+                                false
+                            )
+
+                            getString(R.string.product_details_fragment_already_in_cart)
+                        }
                     },
                     Toast.LENGTH_SHORT
                 ).show()
             }
 
             productData?.let {
-                title.text = it.title
-                name.text = it.name
+                title.text = it.name
+                name.text = it.title
                 brandName.text = it.brandName
-                price.text = it.price
+                price.text = "${it.currency.toCurrency()} ${it.price}"
                 variationsView.text = it.currentVariation
-                description.text = it.description
+                description.text = Html.fromHtml(it.description).toString()
                 variations = it.variations
 
                 variationsView.visible = it.variations.isNullOrEmpty().not()
 
-                context?.let { ctxt ->
-                    if (adapter == null) {
+                if (prevSku != it.sku) {
+                    context?.let { ctxt ->
                         adapter = ImageViewPagerAdapter(
                             ctxt,
                             it.imageUrls
@@ -182,7 +193,9 @@ class ProductDetailsFragment : BaseFragment() {
 
                         viewPager.adapter = adapter
                         circleIndicator.setViewPager(viewPager)
+                        productSku = it.sku
                     }
+                    prevSku = it.sku
                 }
             }
         }

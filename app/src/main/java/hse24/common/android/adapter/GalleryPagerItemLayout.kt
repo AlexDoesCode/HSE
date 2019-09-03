@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
+import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
 import com.bumptech.glide.Glide
@@ -11,11 +12,13 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.Target
 import com.hse24.challenge.R
 import hse24.common.extension.applyLayoutParams
 import hse24.common.extension.doInRuntime
 import hse24.common.extension.selfInflate
 import hse24.common.extension.visible
+import hse24.common.util.DeviceUtils
 
 @SuppressLint("ViewConstructor")
 class GalleryPagerItemLayout @JvmOverloads constructor(
@@ -26,11 +29,11 @@ class GalleryPagerItemLayout @JvmOverloads constructor(
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
     private val image by lazy {
-        findViewById<ImageView>(R.id.categories_category_collapse_up)
+        findViewById<ImageView>(R.id.gallery_pager_item_image)
     }
 
     private val progress by lazy {
-        findViewById<ImageView>(R.id.categories_category_collapse_down)
+        findViewById<View>(R.id.gallery_pager_item_progress)
     }
 
     init {
@@ -40,27 +43,33 @@ class GalleryPagerItemLayout @JvmOverloads constructor(
 
             Glide.with(context)
                 .load(imageUrl)
+                .apply(RequestOptions().apply {
+                    this.fitCenter()
+                })
                 .listener(object : RequestListener<Drawable> {
                     override fun onLoadFailed(
                         e: GlideException?,
                         model: Any?,
-                        target: com.bumptech.glide.request.target.Target<Drawable>?,
+                        target: Target<Drawable>?,
                         isFirstResource: Boolean
                     ) = true
 
                     override fun onResourceReady(
                         resource: Drawable?,
                         model: Any?,
-                        target: com.bumptech.glide.request.target.Target<Drawable>?,
+                        target: Target<Drawable>?,
                         dataSource: DataSource?,
                         isFirstResource: Boolean
                     ): Boolean {
-                        progress.visible = false
+                        resource?.let {
+                            val layoutParams = image.layoutParams
+                            layoutParams.height =
+                                (DeviceUtils.getScreenWidth(context).toLong() * it.intrinsicHeight / it.intrinsicWidth).toInt()
+                            image.layoutParams = layoutParams
+                            progress.visible = false
+                        }
                         return false
                     }
-                })
-                .apply(RequestOptions().apply {
-                    this.fitCenter()
                 })
                 .into(image)
         }

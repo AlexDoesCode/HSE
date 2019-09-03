@@ -13,7 +13,8 @@ sealed class CatalogItemViewModel(open val id: Int) {
         val sku: Int,
         val brandName: String,
         val name: String,
-        val price: String,
+        val price: Float,
+        val currency: String,
         val imageUrl: String
     ) : CatalogItemViewModel(id)
 
