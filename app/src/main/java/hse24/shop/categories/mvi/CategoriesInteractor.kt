@@ -25,7 +25,7 @@ import javax.inject.Inject
 @CategoriesScope
 class CategoriesInteractor @Inject constructor(
     @IoScheduler private val ioScheduler: Scheduler,
-    private val catalogRepository: CategoriesRepository,
+    private val categoriesRepository: CategoriesRepository,
     private val fetchCategoriesUseCase: FetchCategoriesUseCase,
     private val getCategoriesByParentIdUseCase: GetCategoriesByParentIdUseCase,
     private val getCategoriesWithChildrenUseCase: GetCategoriesWithChildrenUseCase,
@@ -36,7 +36,7 @@ class CategoriesInteractor @Inject constructor(
         ObservableTransformer { action ->
             action
                 .switchMap {
-                    catalogRepository
+                    categoriesRepository
                         .observeDepartments()
                         .map {
                             CategoriesResult.Departments(it.map { item -> item.toDepartmentViewModel() }) as CategoriesResult
@@ -94,7 +94,6 @@ class CategoriesInteractor @Inject constructor(
                         }
                         .subscribeOn(ioScheduler)
                         .toObservable()
-                        .startWith(CategoriesResult.Loading)
                         .onErrorReturn { throwable ->
                             Timber.d(throwable)
                             CategoriesResult.DataError
@@ -115,7 +114,6 @@ class CategoriesInteractor @Inject constructor(
                         }
                         .subscribeOn(ioScheduler)
                         .toObservable()
-//                        .startWith(CategoriesResult.Loading)
                         .onErrorReturn { throwable ->
                             Timber.d(throwable)
                             CategoriesResult.DataError
@@ -131,7 +129,6 @@ class CategoriesInteractor @Inject constructor(
                         CategoriesResult.Subcategories(null) as CategoriesResult
                     )
                         .subscribeOn(ioScheduler)
-//                        .startWith(CategoriesResult.Loading)
                         .onErrorReturn { throwable ->
                             Timber.d(throwable)
                             CategoriesResult.DataError

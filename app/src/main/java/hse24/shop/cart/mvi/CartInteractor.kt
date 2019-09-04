@@ -46,6 +46,7 @@ class CartInteractor @Inject constructor(
                 .flatMapCompletable {
                     removeCartItemUseCase.execute(it.sku)
                 }
+                .onErrorComplete()
                 .toObservable()
         }
 
