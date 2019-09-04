@@ -27,6 +27,16 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Gucci Gang" />
 
+            <ImageView
+                android:id="@+id/product_details_fragment_cart"
+                android:layout_width="@dimen/width_30dp"
+                android:layout_height="@dimen/height_30dp"
+                android:layout_marginEnd="@dimen/margin_10dp"
+                app:srcCompat="@drawable/ic_cart"
+                app:layout_constraintTop_toTopOf="@id/product_details_fragment_title"
+                app:layout_constraintBottom_toBottomOf="@id/product_details_fragment_title"
+                app:layout_constraintEnd_toEndOf="@id/product_details_fragment_title" />
+
             <View
                 android:id="@+id/product_details_fragment_divider"
                 android:layout_width="match_parent"

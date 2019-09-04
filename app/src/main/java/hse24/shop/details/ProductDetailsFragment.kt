@@ -45,11 +45,12 @@ class ProductDetailsFragment : BaseFragment() {
 
     private val intentionsSubject = PublishSubject.create<ProductDetailsIntention>()
 
-    private val variantsDialogClickListener = DialogInterface.OnClickListener { _, variationPosition ->
-        intentionsSubject.onNext(
-            ProductDetailsIntention.LoadProductVariation(variations[variationPosition].sku)
-        )
-    }
+    private val variantsDialogClickListener =
+        DialogInterface.OnClickListener { _, variationPosition ->
+            intentionsSubject.onNext(
+                ProductDetailsIntention.LoadProductVariation(variations[variationPosition].sku)
+            )
+        }
 
     private var productSku by FragmentArgumentDelegate<Int>()
 
@@ -69,13 +70,18 @@ class ProductDetailsFragment : BaseFragment() {
 
     private lateinit var progress: View
     private lateinit var addToCartButton: View
+    private lateinit var cart: View
 
     private lateinit var viewPager: ViewPager
     private lateinit var circleIndicator: CircleIndicator
 
     private lateinit var disposables: CompositeDisposable
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.product_details_fragment, container, false)
     }
 
@@ -90,6 +96,7 @@ class ProductDetailsFragment : BaseFragment() {
         description = view.findViewById(R.id.product_details_fragment_description)
         progress = view.findViewById(R.id.product_details_fragment_progress)
         addToCartButton = view.findViewById(R.id.product_details_fragment_add_to_cart)
+        cart = view.findViewById(R.id.product_details_fragment_cart)
 
         viewPager = view.findViewById(R.id.product_details_fragment_view_pager)
         circleIndicator = view.findViewById(R.id.product_details_fragment_circle_indicator)
@@ -122,8 +129,18 @@ class ProductDetailsFragment : BaseFragment() {
                             }
                             .show()
                     }
+                },
+            RxView.clicks(cart)
+                .subscribe {
+                    addFragment(
+                        CartFragment.newInstance(),
+                        R.id.shopping_activity_root,
+                        true
+                    )
                 }
         )
+
+        intentionsSubject.onNext(ProductDetailsIntention.GetLastState)
     }
 
     override fun onStop() {
@@ -158,16 +175,7 @@ class ProductDetailsFragment : BaseFragment() {
                     context,
                     when (it) {
                         true -> getString(R.string.product_details_fragment_added_to_cart)
-                        false -> {
-                            //TODO: Just for test
-                            replaceFragment(
-                                CartFragment.newInstance(),
-                                R.id.shopping_activity_root,
-                                false
-                            )
-
-                            getString(R.string.product_details_fragment_already_in_cart)
-                        }
+                        false -> getString(R.string.product_details_fragment_already_in_cart)
                     },
                     Toast.LENGTH_SHORT
                 ).show()

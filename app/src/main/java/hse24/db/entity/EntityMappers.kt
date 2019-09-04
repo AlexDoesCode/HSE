@@ -58,7 +58,10 @@ fun ProductApiModel.toCatalogEntity(categoryId: Int) = CatalogEntity(
     productName = this.nameShort ?: "UNKNOWN",
     price = this.productPrice.price ?: 0f,
     currencySymbol = this.productPrice.currency ?: "",
-    imageUrl = ImageUtils.getImageUrl(this.imageUris?.first() ?: "", ImageSize.SMALL),
+    imageUrl = when (imageUris) {
+        null -> ""
+        else -> ImageUtils.getImageUrl(this.imageUris.firstOrNull() ?: "", ImageSize.SMALL)
+    },
     categoryIdFk = categoryId
 )
 
@@ -87,7 +90,9 @@ fun ProductDetailsApiModel.toProductModel() = ProductDetailsModel(
     sku = this.sku,
     imageUris = when (this.variations.isNullOrEmpty()) {
         true -> this.imageUris ?: emptyList()
-        false -> variations.firstOrNull { it.sku == this.sku }?.imageUris ?: this.imageUris ?: emptyList()
+        false -> variations.firstOrNull { it.sku == this.sku }?.imageUris ?: this.imageUris
+        ?: emptyList()
+        ?: emptyList()
     },
     title = this.title ?: "UNKNOWN",
     name = this.nameShort ?: "UNKNOWN",

@@ -27,6 +27,7 @@ class CatalogInteractorTest {
     private companion object {
         const val TEST_ID = 0
         const val IS_LAST_PAGE_REACHED = true
+        const val IS_CATEGORY_EMPTY = true
     }
 
     @Rule
@@ -62,7 +63,7 @@ class CatalogInteractorTest {
         whenever(catalogRepository.observeProductsByCategory(TEST_ID))
             .thenReturn(Observable.just(emptyList()))
         whenever(fetchCatalogUseCase.execute(true, TEST_ID))
-            .thenReturn(Single.just(true))
+            .thenReturn(Single.just(Pair(IS_LAST_PAGE_REACHED, IS_CATEGORY_EMPTY)))
 
         val testObserver = createInteractorActionProcessor(CatalogAction.Init(TEST_ID))
             .test()
@@ -71,7 +72,7 @@ class CatalogInteractorTest {
         val expectedResults = listOf(
             CatalogResult.CatalogItems(emptyList()),
             CatalogResult.Loading,
-            CatalogResult.FetchingFinished(true)
+            CatalogResult.FetchingFinished(IS_LAST_PAGE_REACHED, IS_CATEGORY_EMPTY)
         )
 
         testObserver.run {
@@ -112,7 +113,7 @@ class CatalogInteractorTest {
     @Test
     fun `when load action produce correct result`() {
         whenever(fetchCatalogUseCase.execute(false, TEST_ID))
-            .thenReturn(Single.just(IS_LAST_PAGE_REACHED))
+            .thenReturn(Single.just(Pair(IS_LAST_PAGE_REACHED, IS_CATEGORY_EMPTY)))
 
         val testObserver = createInteractorActionProcessor(CatalogAction.LoadNextPage(TEST_ID))
             .test()
@@ -120,7 +121,7 @@ class CatalogInteractorTest {
 
         val expectedResults = listOf(
             CatalogResult.Loading,
-            CatalogResult.FetchingFinished(IS_LAST_PAGE_REACHED)
+            CatalogResult.FetchingFinished(IS_LAST_PAGE_REACHED, IS_CATEGORY_EMPTY)
         )
 
         testObserver.run {

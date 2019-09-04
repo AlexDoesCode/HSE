@@ -10,14 +10,17 @@ import androidx.annotation.UiThread
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.hse24.challenge.R
+import com.jakewharton.rxbinding2.view.RxView
 import hse24.common.android.BaseFragment
 import hse24.common.android.FragmentArgumentDelegate
+import hse24.shop.cart.CartFragment
 import hse24.shop.catalog.adapter.CatalogAdapter
 import hse24.shop.catalog.adapter.CatalogItemViewModel
 import hse24.shop.catalog.mvi.CatalogError
 import hse24.shop.catalog.mvi.CatalogIntention
 import hse24.shop.catalog.mvi.CatalogPresenter
 import hse24.shop.catalog.mvi.CatalogState
+import hse24.shop.categories.CategoriesFragment
 import hse24.shop.details.ProductDetailsFragment
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -79,8 +82,13 @@ class CatalogFragment : BaseFragment() {
 
     private lateinit var catalogRecycler: RecyclerView
     private lateinit var titleText: TextView
+    private lateinit var cart: View
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.catalog_fragment, container, false)
     }
 
@@ -89,6 +97,7 @@ class CatalogFragment : BaseFragment() {
 
         catalogRecycler = view.findViewById(R.id.catalog_fragment_products_recycler)
         titleText = view.findViewById(R.id.catalog_fragment_title)
+        cart = view.findViewById(R.id.catalog_fragment_cart)
 
         titleText.text = categoryName
 
@@ -98,7 +107,9 @@ class CatalogFragment : BaseFragment() {
                 .apply {
                     spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
                         override fun getSpanSize(position: Int) =
-                            if (catalogAdapter.items[position] is CatalogItemViewModel.LoadMore) {
+                            if (catalogAdapter.items[position] is CatalogItemViewModel.LoadMore ||
+                                catalogAdapter.items[position] is CatalogItemViewModel.Empty
+                            ) {
                                 RECYCLER_LOADING_ROW_SPAN
                             } else {
                                 RECYCLER_ROW_ITEMS_SPAN
@@ -117,7 +128,15 @@ class CatalogFragment : BaseFragment() {
                 .subscribe(this::render),
             presenter.processIntentions(
                 intentions()
-            )
+            ),
+            RxView.clicks(cart)
+                .subscribe {
+                    replaceFragment(
+                        CartFragment.newInstance(),
+                        R.id.shopping_activity_root,
+                        true
+                    )
+                }
         )
     }
 
@@ -129,6 +148,15 @@ class CatalogFragment : BaseFragment() {
     override fun onScopeFinished() {
         presenter.destroy()
         super.onScopeFinished()
+    }
+
+    override fun onBackPressed(): Boolean {
+        replaceFragment(
+            CategoriesFragment.newInstance(),
+            R.id.shopping_activity_root,
+            false
+        )
+        return true
     }
 
     @UiThread

@@ -9,7 +9,9 @@ import javax.inject.Inject
 @CategoriesScope
 class CategoriesPresenter @Inject constructor(
     interactor: CategoriesInteractor
-) : MviBasePresenter<CategoriesIntention, CategoriesAction, CategoriesResult, CategoriesState>(interactor) {
+) : MviBasePresenter<CategoriesIntention, CategoriesAction, CategoriesResult, CategoriesState>(
+    interactor
+) {
 
     override val defaultState: CategoriesState
         get() = CategoriesState()
@@ -17,9 +19,12 @@ class CategoriesPresenter @Inject constructor(
     override fun actionFromIntention(intent: CategoriesIntention): CategoriesAction =
         when (intent) {
             CategoriesIntention.Init -> CategoriesAction.Init
-            is CategoriesIntention.GetDepartmentCategories -> CategoriesAction.GetDepartmentCategories(intent.departmentId)
+            is CategoriesIntention.GetDepartmentCategories -> CategoriesAction.GetDepartmentCategories(
+                intent.departmentId
+            )
             is CategoriesIntention.GetSubcategories -> CategoriesAction.GetSubcategories(intent.categoryId)
             CategoriesIntention.ResetSubcategories -> CategoriesAction.ResetSubcategories
+            CategoriesIntention.ResetCategories -> CategoriesAction.ResetCategories
         }
 
     override val reducer: BiFunction<CategoriesState, CategoriesResult, CategoriesState>
@@ -50,6 +55,10 @@ class CategoriesPresenter @Inject constructor(
                 is CategoriesResult.Subcategories -> prevState.copy(
                     subCategories = result.models,
                     isLoading = false
+                )
+                CategoriesResult.ResetCategories -> prevState.copy(
+                    categories = null,
+                    subCategories = null
                 )
             }
         }

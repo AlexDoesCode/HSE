@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import com.hse24.challenge.R
 import hse24.common.android.BaseActivity
+import hse24.common.android.CustomBackButton
 import hse24.shop.categories.CategoriesFragment
 
 class ShoppingActivity : BaseActivity() {
@@ -25,6 +26,16 @@ class ShoppingActivity : BaseActivity() {
                 R.id.shopping_activity_root,
                 false
             )
+        }
+    }
+
+    override fun onBackPressed() {
+        supportFragmentManager.fragments.forEach {
+            if (it is CustomBackButton) {
+                if (it.onBackPressed().not()) {
+                    super.onBackPressed()
+                }
+            }
         }
     }
 }

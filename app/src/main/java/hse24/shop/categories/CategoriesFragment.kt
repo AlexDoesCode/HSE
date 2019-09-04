@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.hse24.challenge.R
 import hse24.common.android.BaseFragment
+import hse24.common.extension.isVisible
 import hse24.common.extension.visible
 import hse24.shop.catalog.CatalogFragment
 import hse24.shop.categories.adapter.CategoriesAdapter
@@ -92,7 +93,8 @@ class CategoriesFragment : BaseFragment() {
     private var prevSelectedCategoryId: Int? = null
     private val categoriesLayoutsMap = mutableMapOf<Int, CategoryLayout>()
 
-    private var adapterDisposable: Disposable? = null
+    private var departmentsAdapterDisposable: Disposable? = null
+    private var categoriesAdapterDisposable: Disposable? = null
     private var departmentsAdapter = DepartmentsAdapter(adapterClickListener)
     private var categoriesAdapter = CategoriesAdapter(adapterClickListener)
 
@@ -153,18 +155,24 @@ class CategoriesFragment : BaseFragment() {
         super.onScopeFinished()
     }
 
+    override fun onBackPressed(): Boolean = if (categoriesRecycler.isVisible()) {
+        categoriesAdapterDisposable?.dispose()
+        categoriesAdapterDisposable = categoriesAdapter
+            .setItems(emptyList())
+            .subscribe {
+                prevSelectedCategoryId = null
+                categoriesLayoutsMap.clear()
+                intentionsSubject.onNext(CategoriesIntention.ResetCategories)
+            }
+        true
+    } else {
+        false
+    }
+
     @UiThread
     private fun render(state: CategoriesState) {
         Timber.d("State is $state")
         with(state) {
-            departments?.let {
-                if (categories == null) {
-                    adapterDisposable?.dispose()
-                    adapterDisposable = departmentsAdapter.setItems(it)
-                        .subscribe()
-                }
-            }
-
             categories?.let {
                 departmentsRecycler.visible = false
                 categoriesRecycler.visible = true
@@ -174,9 +182,19 @@ class CategoriesFragment : BaseFragment() {
                     false -> it + subCategories
                 }
 
-                adapterDisposable?.dispose()
-                adapterDisposable = categoriesAdapter.setItems(allCategories)
+                categoriesAdapterDisposable?.dispose()
+                categoriesAdapterDisposable = categoriesAdapter.setItems(allCategories)
                     .subscribe()
+            }
+
+            departments?.let {
+                if (categories == null) {
+                    departmentsRecycler.visible = true
+                    categoriesRecycler.visible = false
+                    departmentsAdapterDisposable?.dispose()
+                    departmentsAdapterDisposable = departmentsAdapter.setItems(it)
+                        .subscribe()
+                }
             }
         }
     }
