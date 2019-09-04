@@ -6,7 +6,7 @@ import io.reactivex.Observable
 import javax.inject.Inject
 
 @ProductDetailsScope
-class AddProductToCartProcessorUseCase @Inject constructor(
+class AddProductToCartUseCase @Inject constructor(
     private val repository: ProductDetailsRepository
 ) {
 

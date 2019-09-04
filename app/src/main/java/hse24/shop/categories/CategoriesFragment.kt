@@ -36,31 +36,51 @@ class CategoriesFragment : BaseFragment() {
 
     private val intentionsSubject = PublishSubject.create<CategoriesIntention>()
 
-    private val adapterClickListener = object : CategoriesAdapter.CategoryItemCallbackClickListener {
-        override fun onDepartmentClick(id: Int) {
-            Timber.d("Department $id clicked")
-            intentionsSubject.onNext(CategoriesIntention.GetDepartmentCategories(id))
-        }
+    private val adapterClickListener =
+        object : CategoriesAdapter.CategoryItemCallbackClickListener {
+            override fun onDepartmentClick(id: Int) {
+                Timber.d("Department $id clicked")
+                intentionsSubject.onNext(CategoriesIntention.GetDepartmentCategories(id))
+            }
 
-        override fun onCategoryClick(id: Int, name: String, isExpanded: Boolean, hasSubcategories: Boolean) {
-            Timber.d("Category $id clicked")
+            override fun onCategoryClick(
+                id: Int,
+                name: String,
+                isExpanded: Boolean,
+                hasSubcategories: Boolean
+            ) {
+                Timber.d("Category $id clicked")
 
-            if (hasSubcategories) {
-                categoriesLayoutsMap[id]?.toggleExpanded()
-                prevSelectedCategoryId = when (isExpanded) {
-                    false -> {
-                        intentionsSubject.onNext(CategoriesIntention.GetSubcategories(id))
-                        prevSelectedCategoryId?.let {
-                            categoriesLayoutsMap[it]?.toggleExpanded()
+                if (hasSubcategories) {
+                    categoriesLayoutsMap[id]?.toggleExpanded()
+                    prevSelectedCategoryId = when (isExpanded) {
+                        false -> {
+                            intentionsSubject.onNext(CategoriesIntention.GetSubcategories(id))
+                            prevSelectedCategoryId?.let {
+                                categoriesLayoutsMap[it]?.toggleExpanded()
+                            }
+                            id
                         }
-                        id
+                        true -> {
+                            intentionsSubject.onNext(CategoriesIntention.ResetSubcategories)
+                            null
+                        }
                     }
-                    true -> {
-                        intentionsSubject.onNext(CategoriesIntention.ResetSubcategories)
-                        null
-                    }
+                } else {
+                    replaceFragment(
+                        CatalogFragment.newInstance(id, name),
+                        R.id.shopping_activity_root,
+                        false
+                    )
                 }
-            } else {
+            }
+
+            override fun onCategoryRendered(id: Int, view: View) {
+                categoriesLayoutsMap[id] = view as CategoryLayout
+            }
+
+            override fun onSubcategoryClick(id: Int, name: String) {
+                Timber.d("Subcategory $id clicked")
                 replaceFragment(
                     CatalogFragment.newInstance(id, name),
                     R.id.shopping_activity_root,
@@ -68,20 +88,6 @@ class CategoriesFragment : BaseFragment() {
                 )
             }
         }
-
-        override fun onCategoryRendered(id: Int, view: View) {
-            categoriesLayoutsMap[id] = view as CategoryLayout
-        }
-
-        override fun onSubcategoryClick(id: Int, name: String) {
-            Timber.d("Subcategory $id clicked")
-            replaceFragment(
-                CatalogFragment.newInstance(id, name),
-                R.id.shopping_activity_root,
-                false
-            )
-        }
-    }
 
     private var prevSelectedCategoryId: Int? = null
     private val categoriesLayoutsMap = mutableMapOf<Int, CategoryLayout>()
@@ -98,7 +104,11 @@ class CategoriesFragment : BaseFragment() {
 
     private lateinit var disposables: CompositeDisposable
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.categories_fragment, container, false)
     }
 

@@ -37,7 +37,7 @@ class CategoriesPresenter @Inject constructor(
                     isLoading = true
                 )
                 CategoriesResult.LoadingFinished -> prevState.copy(
-                    isLoading = true
+                    isLoading = false
                 )
                 is CategoriesResult.Categories -> prevState.copy(
                     categories = result.models,

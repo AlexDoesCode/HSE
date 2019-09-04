@@ -4,7 +4,7 @@ import hse24.common.mvi.MviInteractor
 import hse24.db.entity.toProductDetailsViewModel
 import hse24.di.IoScheduler
 import hse24.shop.details.di.ProductDetailsScope
-import hse24.shop.usecase.details.AddProductToCartProcessorUseCase
+import hse24.shop.usecase.details.AddProductToCartUseCase
 import hse24.shop.usecase.details.FetchProductBySkuUseCase
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
@@ -17,7 +17,7 @@ import javax.inject.Inject
 class ProductDetailsInteractor @Inject constructor(
     @IoScheduler private val ioScheduler: Scheduler,
     private val fetchProductDetailsBySkuUseCase: FetchProductBySkuUseCase,
-    private val addProductToCartProcessorUseCase: AddProductToCartProcessorUseCase
+    private val addProductToCartUseCase: AddProductToCartUseCase
 ) : MviInteractor<ProductDetailsAction, ProductDetailsResult> {
 
     private val initProcessor: ObservableTransformer<ProductDetailsAction.Init, ProductDetailsResult> =
@@ -68,7 +68,7 @@ class ProductDetailsInteractor @Inject constructor(
         ObservableTransformer { action ->
             action
                 .switchMap {
-                    addProductToCartProcessorUseCase.execute()
+                    addProductToCartUseCase.execute()
                         .map {
                             ProductDetailsResult.CartAdditionResult(it) as ProductDetailsResult
                         }
