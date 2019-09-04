@@ -47,8 +47,11 @@ class CatalogInteractor @Inject constructor(
             action
                 .switchMap {
                     fetchCatalogUseCase.execute(true, it.categoryId)
-                        .map { isLastPageReached ->
-                            CatalogResult.FetchingFinished(isLastPageReached) as CatalogResult
+                        .map { isLastPageReachedIsEmptyPair ->
+                            CatalogResult.FetchingFinished(
+                                isLastPageReachedIsEmptyPair.first,
+                                isLastPageReachedIsEmptyPair.second
+                            ) as CatalogResult
                         }
                         .toObservable()
                         .subscribeOn(ioScheduler)
@@ -70,8 +73,11 @@ class CatalogInteractor @Inject constructor(
             action
                 .switchMap {
                     fetchCatalogUseCase.execute(false, it.categoryId)
-                        .map { isLastPageReached ->
-                            CatalogResult.FetchingFinished(isLastPageReached) as CatalogResult
+                        .map { isLastPageReachedIsEmptyPair ->
+                            CatalogResult.FetchingFinished(
+                                isLastPageReachedIsEmptyPair.first,
+                                isLastPageReachedIsEmptyPair.second
+                            ) as CatalogResult
                         }
                         .toObservable()
                         .subscribeOn(ioScheduler)

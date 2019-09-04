@@ -12,7 +12,11 @@ class SaveCatalogPageUseCase @Inject constructor(
     private val repository: CatalogRepository
 ) {
 
-    fun execute(isFirstPage: Boolean, categoryId: Int, pageProducts: List<ProductApiModel>): Completable =
+    fun execute(
+        isFirstPage: Boolean,
+        categoryId: Int,
+        pageProducts: List<ProductApiModel>
+    ): Completable =
         Completable.fromAction {
             when (isFirstPage) {
                 true -> {

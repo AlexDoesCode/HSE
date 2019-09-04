@@ -96,7 +96,9 @@ class ProductDetailsInteractor @Inject constructor(
                             shared.ofType(ProductDetailsAction.LoadProductVariation::class.java)
                                 .compose(fetchProductProcessor),
                             shared.ofType(ProductDetailsAction.AddProductToCart::class.java)
-                                .compose(addToCartProcessorProcessor)
+                                .compose(addToCartProcessorProcessor),
+                            shared.ofType(ProductDetailsAction.GetLastState::class.java)
+                                .map { ProductDetailsResult.LastState }
                         )
                     )
                 }

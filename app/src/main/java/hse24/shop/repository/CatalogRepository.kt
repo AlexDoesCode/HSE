@@ -32,8 +32,13 @@ class CatalogRepository @Inject constructor(
         true -> shoppingApi.fetchCategoryCatalog(categoryId, 1)
         false -> shoppingApi.fetchCategoryCatalog(categoryId, currentPageIndex)
     }.map {
-        currentPageIndex = it.paging.page + 1
-        Pair(it.paging.page == it.paging.numPages, it.productResults)
+        when (it.paging) {
+            null -> Pair(true, emptyList())
+            else -> {
+                currentPageIndex = it.paging.page + 1
+                Pair(it.paging.page == it.paging.numPages, it.productResults)
+            }
+        }
     }
 
     fun persistProductsPage(products: List<CatalogEntity>) =

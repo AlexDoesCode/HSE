@@ -1,5 +1,6 @@
 package hse24.shop.cart.mvi
 
+import hse24.common.extension.round
 import hse24.common.mvi.MviBasePresenter
 import hse24.common.mvi.OneShot
 import hse24.shop.cart.adapter.CartItemViewModel
@@ -35,7 +36,9 @@ class CartPresenter @Inject constructor(
 
                                         add(
                                             CartItemViewModel.OverallSum(
-                                                result.cartItems.map { (it as CartItemViewModel.ProductItem).price }.sum(),
+                                                result.cartItems.map { (it as CartItemViewModel.ProductItem).price }
+                                                    .sum()
+                                                    .round(2),
                                                 (result.cartItems.first() as CartItemViewModel.ProductItem).currency
                                             )
                                         )

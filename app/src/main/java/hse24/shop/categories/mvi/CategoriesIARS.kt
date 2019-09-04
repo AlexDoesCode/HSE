@@ -8,6 +8,7 @@ sealed class CategoriesIntention : MviIntention {
 
     object Init : CategoriesIntention(), MviInitIntention
     object ResetSubcategories : CategoriesIntention()
+    object ResetCategories : CategoriesIntention()
 
     data class GetDepartmentCategories(val departmentId: Int) : CategoriesIntention()
     data class GetSubcategories(val categoryId: Int) : CategoriesIntention()
@@ -17,6 +18,7 @@ sealed class CategoriesAction : MviAction {
 
     object Init : CategoriesAction()
     object ResetSubcategories : CategoriesAction()
+    object ResetCategories : CategoriesAction()
 
     data class GetDepartmentCategories(val departmentId: Int) : CategoriesAction()
     data class GetSubcategories(val categoryId: Int) : CategoriesAction()
@@ -28,10 +30,14 @@ sealed class CategoriesResult : MviResult {
     object LoadingFinished : CategoriesResult()
     object NetworkError : CategoriesResult()
     object DataError : CategoriesResult()
+    object ResetCategories : CategoriesResult()
 
     data class Departments(val models: List<DepartmentViewModel>) : CategoriesResult()
-    data class Categories(val models: List<CategoryItemViewModel.CategoryViewModel>) : CategoriesResult()
-    data class Subcategories(val models: List<CategoryItemViewModel.SubcategoryViewModel>?) : CategoriesResult()
+    data class Categories(val models: List<CategoryItemViewModel.CategoryViewModel>) :
+        CategoriesResult()
+
+    data class Subcategories(val models: List<CategoryItemViewModel.SubcategoryViewModel>?) :
+        CategoriesResult()
 }
 
 data class CategoriesState(

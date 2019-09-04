@@ -83,8 +83,16 @@ class CategoriesInteractor @Inject constructor(
                         BiFunction<List<CategoryModel>, List<CategoryModel>, List<CategoryItemViewModel.CategoryViewModel>> { categoriesWithChildren, categoriesWithoutChildren ->
                             mutableListOf<CategoryItemViewModel.CategoryViewModel>()
                                 .apply {
-                                    addAll(categoriesWithChildren.map { item -> item.toCategoryViewModel(true) })
-                                    addAll(categoriesWithoutChildren.map { item -> item.toCategoryViewModel(false) })
+                                    addAll(categoriesWithChildren.map { item ->
+                                        item.toCategoryViewModel(
+                                            true
+                                        )
+                                    })
+                                    addAll(categoriesWithoutChildren.map { item ->
+                                        item.toCategoryViewModel(
+                                            false
+                                        )
+                                    })
                                     sortBy { item -> item.name }
                                 }
                         }
@@ -152,7 +160,9 @@ class CategoriesInteractor @Inject constructor(
                             shared.ofType(CategoriesAction.GetSubcategories::class.java)
                                 .compose(getSubcategoriesProcessor),
                             shared.ofType(CategoriesAction.ResetSubcategories::class.java)
-                                .compose(resetSubcategoriesProcessor)
+                                .compose(resetSubcategoriesProcessor),
+                            shared.ofType(CategoriesAction.ResetCategories::class.java)
+                                .map { CategoriesResult.ResetCategories }
                         )
                     )
                 }

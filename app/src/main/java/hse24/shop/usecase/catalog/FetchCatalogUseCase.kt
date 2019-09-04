@@ -10,8 +10,8 @@ class FetchCatalogUseCase @Inject constructor(
     private val saveCatalogPageUseCase: SaveCatalogPageUseCase
 ) {
 
-    //Fetches catalog by category and returns if the last page was reached
-    fun execute(isFirstPage: Boolean, categoryId: Int): Single<Boolean> =
+    //Fetches catalog by category and returns pair: if the last page was reached and if the category is empty
+    fun execute(isFirstPage: Boolean, categoryId: Int): Single<Pair<Boolean, Boolean>> =
         loadCatalogByPageUseCase.execute(isFirstPage, categoryId)
             .flatMap { isLastPageReachedProductsPair ->
                 saveCatalogPageUseCase.execute(
@@ -19,6 +19,11 @@ class FetchCatalogUseCase @Inject constructor(
                     categoryId,
                     isLastPageReachedProductsPair.second
                 )
-                    .toSingleDefault(isLastPageReachedProductsPair.first)
+                    .toSingleDefault(
+                        Pair(
+                            isLastPageReachedProductsPair.first,
+                            isLastPageReachedProductsPair.second.isNullOrEmpty()
+                        )
+                    )
             }
 }

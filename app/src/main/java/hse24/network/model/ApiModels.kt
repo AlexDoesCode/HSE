@@ -9,7 +9,7 @@ data class CategoryApiModel(
 
 data class CatalogPageApiModel(
     val productResults: List<ProductApiModel>,
-    val paging: PageDataApiModel,
+    val paging: PageDataApiModel?,
     val resultCount: Int
 )
 

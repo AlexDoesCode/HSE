@@ -5,6 +5,7 @@ import hse24.shop.details.model.ProductDetailsViewModel
 
 sealed class ProductDetailsIntention : MviIntention {
 
+    object GetLastState : ProductDetailsIntention()
     data class Init(val sku: Int) : ProductDetailsIntention(), MviInitIntention
     data class LoadProductVariation(val sku: Int) : ProductDetailsIntention()
 
@@ -13,6 +14,7 @@ sealed class ProductDetailsIntention : MviIntention {
 
 sealed class ProductDetailsAction : MviAction {
 
+    object GetLastState : ProductDetailsAction()
     data class Init(val sku: Int) : ProductDetailsAction()
     data class LoadProductVariation(val sku: Int) : ProductDetailsAction()
 
@@ -22,6 +24,7 @@ sealed class ProductDetailsAction : MviAction {
 
 sealed class ProductDetailsResult : MviResult {
 
+    object LastState : ProductDetailsResult()
     object Loading : ProductDetailsResult()
     object DataError : ProductDetailsResult()
     object NetworkError : ProductDetailsResult()

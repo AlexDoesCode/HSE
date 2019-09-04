@@ -102,7 +102,7 @@ class ProductDetailsPresenterTest {
             presenter
                 .states()
                 .test()
-//                .addTo(disposables)
+                .addTo(disposables)
 
         presenter.processIntentions(
             Observable.just(ProductDetailsIntention.LoadProductVariation(TEST_SKU))

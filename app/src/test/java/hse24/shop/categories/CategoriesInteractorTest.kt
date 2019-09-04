@@ -160,9 +160,10 @@ class CategoriesInteractorTest {
         whenever(getCategoriesWithoutChildrenUseCase.execute(TEST_ID))
             .thenReturn(Single.just(emptyList()))
 
-        val testObserver = createInteractorActionProcessor(CategoriesAction.GetDepartmentCategories(TEST_ID))
-            .test()
-            .addTo(disposables)
+        val testObserver =
+            createInteractorActionProcessor(CategoriesAction.GetDepartmentCategories(TEST_ID))
+                .test()
+                .addTo(disposables)
 
         val expectedResults = listOf(
             CategoriesResult.Categories(emptyList())
@@ -189,9 +190,10 @@ class CategoriesInteractorTest {
         whenever(getCategoriesWithoutChildrenUseCase.execute(TEST_ID))
             .thenReturn(Single.just(emptyList()))
 
-        val testObserver = createInteractorActionProcessor(CategoriesAction.GetDepartmentCategories(TEST_ID))
-            .test()
-            .addTo(disposables)
+        val testObserver =
+            createInteractorActionProcessor(CategoriesAction.GetDepartmentCategories(TEST_ID))
+                .test()
+                .addTo(disposables)
 
         val expectedResults = listOf(
             CategoriesResult.DataError
@@ -218,9 +220,10 @@ class CategoriesInteractorTest {
         whenever(getCategoriesWithoutChildrenUseCase.execute(TEST_ID))
             .thenReturn(Single.error(throwableMock))
 
-        val testObserver = createInteractorActionProcessor(CategoriesAction.GetDepartmentCategories(TEST_ID))
-            .test()
-            .addTo(disposables)
+        val testObserver =
+            createInteractorActionProcessor(CategoriesAction.GetDepartmentCategories(TEST_ID))
+                .test()
+                .addTo(disposables)
 
         val expectedResults = listOf(
             CategoriesResult.DataError
@@ -245,9 +248,10 @@ class CategoriesInteractorTest {
         whenever(getCategoriesByParentIdUseCase.execute(TEST_ID))
             .thenReturn(Single.just(emptyList()))
 
-        val testObserver = createInteractorActionProcessor(CategoriesAction.GetSubcategories(TEST_ID))
-            .test()
-            .addTo(disposables)
+        val testObserver =
+            createInteractorActionProcessor(CategoriesAction.GetSubcategories(TEST_ID))
+                .test()
+                .addTo(disposables)
 
         val expectedResults = listOf(
             CategoriesResult.Subcategories(emptyList())
@@ -273,9 +277,10 @@ class CategoriesInteractorTest {
         whenever(getCategoriesByParentIdUseCase.execute(TEST_ID))
             .thenReturn(Single.error(throwableMock))
 
-        val testObserver = createInteractorActionProcessor(CategoriesAction.GetSubcategories(TEST_ID))
-            .test()
-            .addTo(disposables)
+        val testObserver =
+            createInteractorActionProcessor(CategoriesAction.GetSubcategories(TEST_ID))
+                .test()
+                .addTo(disposables)
 
         val expectedResults = listOf(
             CategoriesResult.DataError

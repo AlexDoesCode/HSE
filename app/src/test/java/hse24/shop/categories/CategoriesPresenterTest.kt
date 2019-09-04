@@ -58,6 +58,7 @@ class CategoriesPresenterTest {
             Observable.just(CategoriesIntention.Init)
         )
             .addTo(disposables)
+
         testObserver.assertValue(state)
     }
 

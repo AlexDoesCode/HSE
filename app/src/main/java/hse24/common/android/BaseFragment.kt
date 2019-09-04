@@ -5,7 +5,7 @@ import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import dagger.android.support.DaggerFragment
 
-abstract class BaseFragment : DaggerFragment() {
+abstract class BaseFragment : DaggerFragment(), CustomBackButton {
 
     override fun onDestroy() {
         super.onDestroy()
@@ -34,6 +34,14 @@ abstract class BaseFragment : DaggerFragment() {
 
     @CallSuper
     protected open fun onScopeFinished() {
+    }
+
+    override fun onBackPressed(): Boolean = false
+
+    fun addFragment(fragment: Fragment, @IdRes rootId: Int, addToBackStack: Boolean = true) {
+        if (activity != null) {
+            (activity as BaseActivity).addFragment(fragment, rootId, addToBackStack)
+        }
     }
 
     fun replaceFragment(fragment: Fragment, @IdRes rootId: Int, addToBackStack: Boolean = true) {

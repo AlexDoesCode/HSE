@@ -1,6 +1,7 @@
 package hse24.shop.catalog.adapter
 
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.widget.FrameLayout
 import android.widget.ProgressBar
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
@@ -9,6 +10,7 @@ import com.hse24.challenge.R
 import hse24.common.android.adapter.*
 import hse24.common.extension.applyLayoutParams
 import hse24.common.extension.getDimensionPixelSizeCompat
+import hse24.common.extension.selfInflate
 import hse24.common.extension.setMarginTopResCompat
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -22,12 +24,25 @@ class CatalogAdapter(
     private companion object {
         const val TYPE_ITEM_PRODUCT = 0
         const val TYPE_ITEM_LOAD_MORE = 1
+        const val TYPE_EMPTY_CATALOG = 2
         const val ITEMS_LIMIT = 6
     }
 
     init {
         addDelegate(TYPE_ITEM_PRODUCT, TypedAdapterDelegate { parent ->
             val layout = ProductLayout(parent.context, clickListener)
+            ViewHolderRenderer(layout)
+        })
+        addDelegate(TYPE_EMPTY_CATALOG, TypedAdapterDelegate { parent ->
+            val layout = object : ItemRenderer<CatalogItemViewModel>,
+                FrameLayout(parent.context, null, android.R.attr.progressBarStyleLarge) {
+                override fun render(data: CatalogItemViewModel) {
+                    // no-op
+                }
+            }.apply {
+                selfInflate(R.layout.catalog_empty_layout)
+                applyLayoutParams()
+            }
             ViewHolderRenderer(layout)
         })
         addDelegate(TYPE_ITEM_LOAD_MORE, TypedAdapterDelegate { parent ->
@@ -37,7 +52,10 @@ class CatalogAdapter(
                     // no-op
                 }
             }.apply {
-                applyLayoutParams(MATCH_PARENT, parent.context.getDimensionPixelSizeCompat(R.dimen.height_50dp))
+                applyLayoutParams(
+                    MATCH_PARENT,
+                    parent.context.getDimensionPixelSizeCompat(R.dimen.height_50dp)
+                )
                 setMarginTopResCompat(R.dimen.margin_15dp)
                 indeterminateDrawable.setTint(ContextCompat.getColor(context, R.color.hse_primary))
             }
@@ -50,9 +68,14 @@ class CatalogAdapter(
     override fun getItemViewType(position: Int) = when (items[position]) {
         is CatalogItemViewModel.ProductViewModel -> TYPE_ITEM_PRODUCT
         is CatalogItemViewModel.LoadMore -> TYPE_ITEM_LOAD_MORE
+        CatalogItemViewModel.Empty -> TYPE_EMPTY_CATALOG
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int, payloads: MutableList<Any>) {
+    override fun onBindViewHolder(
+        holder: RecyclerView.ViewHolder,
+        position: Int,
+        payloads: MutableList<Any>
+    ) {
         super.onBindViewHolder(holder, position, payloads)
         val itemsLeft = items.size - position
         if (itemsLeft < ITEMS_LIMIT)

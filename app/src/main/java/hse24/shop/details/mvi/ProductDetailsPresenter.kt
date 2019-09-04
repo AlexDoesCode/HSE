@@ -20,7 +20,10 @@ class ProductDetailsPresenter @Inject constructor(
         when (intent) {
             is ProductDetailsIntention.Init -> ProductDetailsAction.Init(intent.sku)
             ProductDetailsIntention.AddProductToCart -> ProductDetailsAction.AddProductToCart
-            is ProductDetailsIntention.LoadProductVariation -> ProductDetailsAction.LoadProductVariation(intent.sku)
+            is ProductDetailsIntention.LoadProductVariation -> ProductDetailsAction.LoadProductVariation(
+                intent.sku
+            )
+            ProductDetailsIntention.GetLastState -> ProductDetailsAction.GetLastState
         }
 
     override val reducer: BiFunction<ProductDetailsState, ProductDetailsResult, ProductDetailsState>
@@ -44,6 +47,9 @@ class ProductDetailsPresenter @Inject constructor(
                 ProductDetailsResult.NetworkError -> prevState.copy(
                     isLoading = false,
                     error = OneShot(ProductDetailsError.NETWORK)
+                )
+                ProductDetailsResult.LastState -> prevState.copy(
+
                 )
             }
         }

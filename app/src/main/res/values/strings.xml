@@ -10,5 +10,6 @@
     <string name="product_details_fragment_already_in_cart">Product is already in the cart</string>
     <string name="cart_sum_layout_overall_sum">Overall sum:</string>
     <string name="cart_empty_layout_text">Your cart is empty</string>
+    <string name="catalog_empty_layout_text">No items in this category</string>
 
 </resources>

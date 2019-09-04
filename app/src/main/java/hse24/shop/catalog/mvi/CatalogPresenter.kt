@@ -53,10 +53,17 @@ class CatalogPresenter @Inject constructor(
                     error = OneShot(CatalogError.NETWORK)
                 )
                 is CatalogResult.FetchingFinished -> {
-                    prevState.copy(
-                        isLoading = false,
-                        isLastPageReached = result.isLastPageReached
-                    )
+                    when (result.isCategoryEmpty) {
+                        true -> prevState.copy(
+                            isLoading = false,
+                            isLastPageReached = true,
+                            catalogItems = listOf(CatalogItemViewModel.Empty)
+                        )
+                        else -> prevState.copy(
+                            isLoading = false,
+                            isLastPageReached = result.isLastPageReached
+                        )
+                    }
                 }
             }
         }

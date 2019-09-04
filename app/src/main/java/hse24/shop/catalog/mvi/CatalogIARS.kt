@@ -22,7 +22,8 @@ sealed class CatalogResult : MviResult {
     object NetworkError : CatalogResult()
 
     data class CatalogItems(val pageItems: List<CatalogItemViewModel>) : CatalogResult()
-    data class FetchingFinished(val isLastPageReached: Boolean) : CatalogResult()
+    data class FetchingFinished(val isLastPageReached: Boolean, val isCategoryEmpty: Boolean) :
+        CatalogResult()
 }
 
 data class CatalogState(
