@@ -9,7 +9,7 @@ for which I had not time to cleanup:
   3. I had no relevant spec. for your server so I don't guarantee the data consistency, but I tried to do my best learning it
      just by trying to receive `json` objects and making my own assumptions.
   4. No bottom bar (for cart?) and top one also (for back button?), just ran out of time, sorry :(
-      tip. You can steel use a hardware back button functionality.
+      tip. You can still use a hardware back button functionality.
   5. Designing UI\UX is not my best skill so please deal with what you get :)
  
 Cheers. Alex.
